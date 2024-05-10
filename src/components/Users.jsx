@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 
-const ProductList = () => {
+const Users = () => {
   const [data, setData] = useState([]);
 
   const fetchUsers = async () => {
@@ -79,4 +79,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default Users;
