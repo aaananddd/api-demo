@@ -1,3 +1,11 @@
-export default function App() {
-  return <h1 className="text-3xl font-bold text-cyan-800 underline">Hello world!</h1>;
+import Users from "./components/Users"
+
+const App = () => {
+  return (
+    <div>
+      <Users />
+    </div>
+  )
 }
+
+export default App
