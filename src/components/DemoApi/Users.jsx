@@ -1,42 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
-  CardDescription,
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
+import Loader from "./Loader";
 
 const Users = () => {
   const [data, setData] = useState([]);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      setData(response.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   return (
     <div className="flex justify-center p-6">
       <div>
-        <Button
-          variant="secondary"
-          className="bg-slate-600 flex flex-col  p-2 rounded-2xl text-white font-semibold transition-none hover:bg-slate-700 focus:bg-slate-700"
-          onClick={fetchUsers}
-        >
-          Get User Details
-        </Button>
-
+        <Loader />
         <div className="grid grid-cols-1 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {data.map((user) => (
             <Card key={user.id} className="flex flex-col h-full">
