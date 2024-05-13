@@ -19,10 +19,12 @@ const Users = () => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
+        const response = await fetch(
           "https://jsonplaceholder.typicode.com/users"
         );
-        setData(response.data);
+
+        const data = await response.json();
+        setData(data);
       } catch (error) {
         console.error("Error fetching users:", error);
         setError("Error fetching users. Please try again later.");
