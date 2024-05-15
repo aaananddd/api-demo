@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 import {
   Card,
@@ -7,44 +11,44 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Button } from "@/components/ui/button";
 
+
+const queryClient = new QueryClient();
+
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Users />
+    </QueryClientProvider>
+  );
+};
+
 const Users = () => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-
-        const data = await response.json();
-        setData(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setError("Error fetching users. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const response = await axios.get(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      return response.data;
+    },
+  });
 
   return (
     <div className="flex justify-center p-6">
       <div>
         {error ? (
-          <p>Error: {error}</p>
+          <p>Error: {error.message}</p>
         ) : isLoading ? (
           <p>Loading...</p>
         ) : (
           <div className="grid grid-cols-1 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data.map((user) => (
+            {users.map((user) => (
               <Card key={user.id} className="flex flex-col h-full">
                 <CardHeader className="flex flex-col">
                   <div className="flex flex-col lg:flex-row gap-x-4 gap-y-4 justify-start items-start lg:items-center">
@@ -53,7 +57,7 @@ const Users = () => {
                         <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
-                      <div className=" w-42">
+                      <div className="w-42">
                         <h1 className="w-40 truncate">{user.name}</h1>
                         <p className="text-sm text-black/50">{user.email}</p>
                       </div>
@@ -86,4 +90,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default App;
